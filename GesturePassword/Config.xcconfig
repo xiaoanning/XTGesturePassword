@@ -1,0 +1,70 @@
+//
+//  Config.xcconfig
+//  GesturePassword
+//
+//  Created by 安宁 on 2017/5/13.
+//  Copyright © 2017年 安宁. All rights reserved.
+//
+
+//frame
+KKScreenWidth = [[UIScreen mainScreen]bounds].size.width
+KKScreenHeight = [[UIScreen mainScreen]bounds].size.height
+KKLeftSpace = 30.0f/750.0f * $(KKScreenWidth)
+KKRightSpace = 30.0f/750.0f * $(KKScreenWidth)
+KKNavigationBarHeight = 88.0f/1330.0f*$(KKScreenHeight)
+KKStatusBarHeight = 40.0f/1330.0f*$(KKScreenHeight)
+KKBackViewHeight = 40.0f/750.0f * $(KKScreenWidth)
+KKRightViewHeight = 40.0f/750.0f * $(KKScreenWidth)
+KKTabBarHeight = 98.0f/1330.0f*$(KKScreenHeight)
+
+
+
+
+
+//颜色
+KKWhiteColor = [UIColor whiteColor]
+KKBlackColor = [UIColor blackColor]
+KKClearColor = [UIColor clearColor]
+KKGrayColor = [UIColor grayColor]
+KKRedColor = [UIColor redColor]
+KKBlueColor = [UIColor blueColor]
+
+KKLineGrayColor = [UIColor colorWithWhite:0 alpha:0.25]
+
+KKGrayColora3a3a3 = [UIColor colorWithHexString:@"#a3a3a3"]
+KKGrayColor666666 = [UIColor colorWithHexString:@"#666666"]
+KKGrayColor999999 = [UIColor colorWithHexString:@"#999999"]
+KKGrayColorf2f2f2 = [UIColor colorWithHexString:@"#f2f2f2"]
+KKBlueColor07ace9 = [UIColor colorWithHexString:@"#07ace9"]
+KKBlueColor1f90e7 = [UIColor colorWithHexString:@"#1f90e7"]
+KKBlueColor00A4EA = [UIColor colorWithHexString:@"#00A4EA"]
+KKWhiteColorffffff = [UIColor colorWithHexString:@"#ffffff"]
+KKWhiteColor63b2ee = [UIColor colorWithHexString:@"#63b2ee"]
+KKWhiteColore5f1fc = [UIColor colorWithHexString:@"#e5f1fc"]
+KKWhiteColorf5f5f9 = [UIColor colorWithHexString:@"#f5f5f9"]
+KKWhiteColor939393A50 = [UIColor colorWithHexString:@"#939393" andAlpha:0.5]
+
+
+//字体
+KKFont10 = [UIFont systemFontOfSize:10]
+KKFont12 = [UIFont systemFontOfSize:12]
+KKFont13 = [UIFont systemFontOfSize:13]
+KKFont14 = [UIFont systemFontOfSize:14]
+KKFont15 = [UIFont systemFontOfSize:15]
+KKFont16 = [UIFont systemFontOfSize:16]
+KKFont18 = [UIFont systemFontOfSize:18]
+KKFont20 = [UIFont systemFontOfSize:20]
+KKFont22 = [UIFont systemFontOfSize:22]
+
+KKBoldFont12 = [UIFont boldSystemFontOfSize:12]
+KKNavigationTitleFont = $(KKFont18)
+
+
+
+
+
+
+
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited)  KKScreenWidth='$(KKScreenWidth)' KKScreenHeight='$(KKScreenHeight)' KKLeftSpace='$(KKLeftSpace)' KKRightSpace='$(KKRightSpace)' KKNavigationBarHeight='$(KKNavigationBarHeight)' KKStatusBarHeight='$(KKStatusBarHeight)' KKBackViewHeight='$(KKBackViewHeight)' KKRightViewHeight='$(KKRightViewHeight)' KKTabBarHeight='$(KKTabBarHeight)' KKWhiteColor='$(KKWhiteColor)' KKBlackColor='$(KKBlackColor)' KKClearColor='$(KKClearColor)' KKGrayColor='$(KKGrayColor)' KKRedColor='$(KKRedColor)' KKBlueColor='$(KKBlueColor)' KKLineGrayColor='$(KKLineGrayColor)' KKGrayColora3a3a3='$(KKGrayColora3a3a3)' KKGrayColor666666='$(KKGrayColor666666)' KKGrayColor999999='$(KKGrayColor999999)' KKGrayColorf2f2f2='$(KKGrayColorf2f2f2)' KKBlueColor07ace9='$(KKBlueColor07ace9)' KKBlueColor1f90e7='$(KKBlueColor1f90e7)' KKBlueColor00A4EA='$(KKBlueColor00A4EA)' KKWhiteColorffffff='$(KKWhiteColorffffff)' KKWhiteColor63b2ee='$(KKWhiteColor63b2ee)' KKWhiteColore5f1fc='$(KKWhiteColore5f1fc)' KKWhiteColorf5f5f9='$(KKWhiteColorf5f5f9)' KKWhiteColor939393A50='$(KKWhiteColor939393A50)' KKFont10='$(KKFont10)' KKFont12='$(KKFont12)' KKFont13='$(KKFont13)' KKFont14='$(KKFont14)' KKFont15='$(KKFont15)' KKFont16='$(KKFont16)' KKFont18='$(KKFont18)' KKFont20='$(KKFont20)' KKFont22='$(KKFont22)' KKBoldFont12='$(KKBoldFont12)' KKNavigationTitleFont='$(KKNavigationTitleFont)'
+
+
