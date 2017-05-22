@@ -1,7 +1,7 @@
-#import "GestureSmallButton.h"
+#import "HZBGestureSmallButton.h"
 
 
-@implementation GestureSmallButton
+@implementation HZBGestureSmallButton
 
 
 - (id)initWithFrame:(CGRect)frame
@@ -46,6 +46,14 @@
         CGContextFillPath(context);
     }
     
+}
+
+
+-(void)setSelected:(BOOL)selected
+{
+    _selected = selected ;
+    
+    [self setNeedsDisplay];
 }
 
 

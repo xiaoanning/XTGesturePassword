@@ -17,7 +17,7 @@
 		4D38FF891EC7029700869CC9 /* readme.md in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF7E1EC7029700869CC9 /* readme.md */; };
 		4D38FF8A1EC7029700869CC9 /* HZBGesturePasswordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF811EC7029700869CC9 /* HZBGesturePasswordButton.m */; };
 		4D38FF8B1EC7029700869CC9 /* HZBGesturePasswordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF831EC7029700869CC9 /* HZBGesturePasswordView.m */; };
-		4D38FF8C1EC7029700869CC9 /* GestureSmallButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF851EC7029700869CC9 /* GestureSmallButton.m */; };
+		4D38FF8C1EC7029700869CC9 /* HZBGestureSmallButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF851EC7029700869CC9 /* HZBGestureSmallButton.m */; };
 		4D38FF8D1EC7029700869CC9 /* HZBTentacleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF871EC7029700869CC9 /* HZBTentacleView.m */; };
 /* End PBXBuildFile section */
 
@@ -39,8 +39,8 @@
 		4D38FF811EC7029700869CC9 /* HZBGesturePasswordButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZBGesturePasswordButton.m; sourceTree = "<group>"; };
 		4D38FF821EC7029700869CC9 /* HZBGesturePasswordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZBGesturePasswordView.h; sourceTree = "<group>"; };
 		4D38FF831EC7029700869CC9 /* HZBGesturePasswordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZBGesturePasswordView.m; sourceTree = "<group>"; };
-		4D38FF841EC7029700869CC9 /* GestureSmallButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GestureSmallButton.h; sourceTree = "<group>"; };
-		4D38FF851EC7029700869CC9 /* GestureSmallButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GestureSmallButton.m; sourceTree = "<group>"; };
+		4D38FF841EC7029700869CC9 /* HZBGestureSmallButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZBGestureSmallButton.h; sourceTree = "<group>"; };
+		4D38FF851EC7029700869CC9 /* HZBGestureSmallButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZBGestureSmallButton.m; sourceTree = "<group>"; };
 		4D38FF861EC7029700869CC9 /* HZBTentacleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZBTentacleView.h; sourceTree = "<group>"; };
 		4D38FF871EC7029700869CC9 /* HZBTentacleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZBTentacleView.m; sourceTree = "<group>"; };
 		4D38FF8E1EC702B900869CC9 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
@@ -133,8 +133,8 @@
 				4D38FF811EC7029700869CC9 /* HZBGesturePasswordButton.m */,
 				4D38FF821EC7029700869CC9 /* HZBGesturePasswordView.h */,
 				4D38FF831EC7029700869CC9 /* HZBGesturePasswordView.m */,
-				4D38FF841EC7029700869CC9 /* GestureSmallButton.h */,
-				4D38FF851EC7029700869CC9 /* GestureSmallButton.m */,
+				4D38FF841EC7029700869CC9 /* HZBGestureSmallButton.h */,
+				4D38FF851EC7029700869CC9 /* HZBGestureSmallButton.m */,
 				4D38FF861EC7029700869CC9 /* HZBTentacleView.h */,
 				4D38FF871EC7029700869CC9 /* HZBTentacleView.m */,
 			);
@@ -216,7 +216,7 @@
 				4D38FF8A1EC7029700869CC9 /* HZBGesturePasswordButton.m in Sources */,
 				4D38FF401EC6B20200869CC9 /* ViewController.m in Sources */,
 				4D38FF3D1EC6B20200869CC9 /* AppDelegate.m in Sources */,
-				4D38FF8C1EC7029700869CC9 /* GestureSmallButton.m in Sources */,
+				4D38FF8C1EC7029700869CC9 /* HZBGestureSmallButton.m in Sources */,
 				4D38FF3A1EC6B20200869CC9 /* main.m in Sources */,
 				4D38FF891EC7029700869CC9 /* readme.md in Sources */,
 				4D38FF881EC7029700869CC9 /* HZBGesturePasswordController.m in Sources */,

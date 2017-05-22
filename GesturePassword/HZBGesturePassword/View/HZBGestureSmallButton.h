@@ -6,7 +6,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GestureSmallButton : UIView
+@interface HZBGestureSmallButton : UIView
 
 @property (nonatomic,assign) BOOL selected;
 

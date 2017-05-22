@@ -77,6 +77,18 @@
     [self setNeedsDisplay];
 }
 
+-(void)setSuccess:(BOOL)success
+{
+    _success = success ;
+    
+    [self setNeedsDisplay];
+}
+-(void)setSelected:(BOOL)selected
+{
+    _selected = selected;
+    
+    [self setNeedsDisplay];
+}
 
 
 @end

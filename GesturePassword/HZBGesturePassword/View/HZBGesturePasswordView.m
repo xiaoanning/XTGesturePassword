@@ -1,5 +1,5 @@
 #import "HZBGesturePasswordView.h"
-#import "GestureSmallButton.h"
+#import "HZBGestureSmallButton.h"
 #import "HZBGesturePasswordButton.h"
 #import "HZBTentacleView.h"
 
@@ -129,7 +129,7 @@
 
             for (int i = 0; i < rowItemCount * colItemCount ;  i ++ )
             {
-                GestureSmallButton * gestureSmallButton = [[GestureSmallButton alloc]initWithFrame:CGRectMake((itemWidth + midSpace)*(i%rowItemCount) , (itemWidth + midSpace) * (i / rowItemCount), itemWidth, itemWidth)];
+                HZBGestureSmallButton * gestureSmallButton = [[HZBGestureSmallButton alloc]initWithFrame:CGRectMake((itemWidth + midSpace)*(i%rowItemCount) , (itemWidth + midSpace) * (i / rowItemCount), itemWidth, itemWidth)];
                 [gestureSmallButton setTag:i+100];
 //                gestureSmallButton.backgroundColor = KKGrayColor ;
                 [_smallGestureView addSubview:gestureSmallButton];
@@ -252,7 +252,7 @@
     
     for ( NSDictionary * num in array ){
         if(![num objectForKey:@"num"])break;
-        GestureSmallButton *view = (GestureSmallButton *)[_drawView viewWithTag:[[num objectForKey:@"num"] intValue]+99];
+        HZBGestureSmallButton *view = (HZBGestureSmallButton *)[_drawView viewWithTag:[[num objectForKey:@"num"] intValue]+99];
         view.selected = YES;
         [view setNeedsDisplay];
     }
@@ -261,7 +261,7 @@
 - (void)clearDrawView
 {
     for(int i = 0; i<9; i++) {
-        GestureSmallButton *view = (GestureSmallButton *)[_drawView viewWithTag:i + 100];
+        HZBGestureSmallButton *view = (HZBGestureSmallButton *)[_drawView viewWithTag:i + 100];
         view.selected = NO;
         [view setNeedsDisplay];
     }
