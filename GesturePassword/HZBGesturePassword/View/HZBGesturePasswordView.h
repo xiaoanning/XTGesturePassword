@@ -6,63 +6,43 @@
 
 #import <UIKit/UIKit.h>
 #import "HZBTentacleView.h"
+#import "HZBTextModel.h"
+
+typedef NS_ENUM(NSUInteger , TouchCode)
+{
+    TouchIsSuccess    = 1 , //登陆时与原密码校验一致 ;  设置时符合规则要求 ; 二次校验与第一次输入一致 ;
+    TouchIsLengthLess = 2 , //密码长度不够
+    TouchIsLoginError = 3 , // 登陆／重置 密码与原密码校验错误
+    TouchIsTwoStepVerificationError = 4 ,//二次校验错误
+    TouchIsError = 5 , //其他错误
+};
+
 
 typedef NS_ENUM(NSUInteger, GesturePasswordType)
 {
-    GesturePasswordTypeLogin = 1,
+    GesturePasswordTypeLogin = 1, //登陆 或者是校验已设密码
 
-    GesturePasswordTypeSet = 2,
+    GesturePasswordTypeSet = 2, // 提交设置
 
-    GesturePasswordTypeTwoStepVerification = 3,
+    GesturePasswordTypeOneStepSet = 3, //设置时第一次输入
+
+    GesturePasswordTypeTwoStepVerification = 4, //设置时二次校验
     
-    GesturePasswordTypeReset = 4,
+    GesturePasswordTypeReset = 5, //重置
     
 
 };
 
-@protocol GesturePasswordDelegate <NSObject>
 
-- (void)forget;
-- (void)change;
-- (void)backToView;
-- (void)closeGesture;
-- (void)againSet;
+@interface HZBGesturePasswordView : UIView
 
-@end
+- (id)initWithFrame:(CGRect)frame type:(GesturePasswordType)type ;
 
+@property ( nonatomic , copy ) void(^touchesEndedCallback)(NSString * touchesResult ,  GesturePasswordType type ,void(^resultCallback)(TouchCode code  , NSString * tips)) ;
 
-@interface HZBGesturePasswordView : UIView<TouchBeginDelegate>
+@property ( nonatomic , copy ) void(^forgetPasswordWhenLoginCallback)() ;
+@property ( nonatomic , copy ) void(^forgetPasswordWhenResetCallback)() ;
 
-- (id)initWithFrame:(CGRect)frame type:(GesturePasswordType)type;
-
-@property (nonatomic,copy) NSString * userName;
-
-@property ( nonatomic , strong ) UILabel * tipsLabel;
-
-
-@property (nonatomic,strong) HZBTentacleView * tentacleView;
-
-@property (nonatomic,strong) UILabel *bigTitle;
-@property (nonatomic,strong) UILabel *smalllTitle;
-
-@property (nonatomic,strong) UILabel *unlockTitle;
-@property (nonatomic,strong) UILabel *userTitle;
-
-
-@property (nonatomic,assign) id<GesturePasswordDelegate> gesturePasswordDelegate;
-
-
-@property (nonatomic,strong) UIButton * backButton;
-@property (nonatomic,strong) UIButton * resetButton;
-@property (nonatomic,strong) UIButton * closeButton;
-
-@property (nonatomic,strong) UIButton * forgetButton;
-@property (nonatomic,strong) UIButton * changeButton;
-
-@property (nonatomic,strong) UIView * drawView;
-
-- (void)initViewWithType:(NSInteger )type;
-- (void)checkdrawView:(NSArray *)array;
-- (void)clearDrawView;
+@property ( nonatomic , copy ) void(^otherLoginType)() ;
 
 @end

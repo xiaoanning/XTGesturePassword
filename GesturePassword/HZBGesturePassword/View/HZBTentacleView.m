@@ -1,7 +1,6 @@
 
 
 #import "HZBTentacleView.h"
-#import "HZBGesturePasswordButton.h"
 
 
 @interface HZBTentacleView ()
@@ -12,10 +11,9 @@
     CGPoint _lineStartPoint;
     CGPoint _lineEndPoint;
     
-    NSMutableArray * _touchedArray;
+    NSMutableArray <HZBGesturePasswordButton *> * _touchedArray;
     NSMutableString * _selectNumString ;
     
-    BOOL _success;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -23,14 +21,20 @@
     self = [super initWithFrame:frame];
     if (self)
     {
-        _touchedArray = [[NSMutableArray alloc]initWithCapacity:10];
-        _selectNumString = [NSMutableString string];
-        _success = YES ;
-
+        [self prepareData];
+        
         [self setBackgroundColor:[UIColor clearColor]];
         [self setUserInteractionEnabled:YES];
     }
     return self;
+}
+
+-(void)prepareData
+{
+    _touchedArray = [[NSMutableArray alloc]initWithCapacity:10];
+    _selectNumString = [NSMutableString string];
+    _success = YES ;
+
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -38,10 +42,7 @@
     CGPoint touchPoint;
     UITouch *touch = [touches anyObject];
 
-    [_touchedArray removeAllObjects];
-    _selectNumString = [NSMutableString string];
-    _success = YES ;
-    
+    [self prepareData];
     
     if (touch)
     {
@@ -49,7 +50,7 @@
 
         for (int i = 0; i< _buttonArray.count ; i++)
         {
-            HZBGesturePasswordButton * buttonTemp = ((HZBGesturePasswordButton *)[_buttonArray objectAtIndex:i]);
+            HZBGesturePasswordButton * buttonTemp = [_buttonArray objectAtIndex:i];
 
             [buttonTemp returnToTheOriginalData];
             
@@ -62,8 +63,12 @@
 
                 _lineStartPoint = buttonTemp.center ;
                 
-                break ;
             }
+        }
+        
+        if (_touchesBeginCallback)
+        {
+            _touchesBeginCallback();
         }
         
         [self setNeedsDisplay];
@@ -82,7 +87,7 @@
 
         for (int i = 0 ; i < _buttonArray.count ; i ++ )
         {
-            HZBGesturePasswordButton * buttonTemp = ((HZBGesturePasswordButton *)[_buttonArray objectAtIndex:i]);
+            HZBGesturePasswordButton * buttonTemp = [_buttonArray objectAtIndex:i];
             if (CGRectContainsPoint(buttonTemp.frame,touchPoint))
             {
 
@@ -108,57 +113,49 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSMutableString * resultString=[NSMutableString string];
-
-    for ( NSDictionary * num in _touchesArray )
-    {
-        if(![num objectForKey:@"num"])
+    @try {
+        
+        if (_selectNumString.length && _touchesEndedCallback)
         {
-            break;
+            _touchesEndedCallback(_selectNumString);
         }
-        [resultString appendString:[num objectForKey:@"num"]];
+
+    } @catch (NSException *exception) {
+        
+        NSLog(@"%@",exception);
+        
+    } @finally {
+
     }
-    343498
-    if(resultString.length == 0)
-    {
-        return;
-    }
-    if(_style==1)
-    {
-        [_rerificationDelegate verification:resultString];
-    }else
-    {
-        [_resetDelegate resetPassword:resultString withArray:[_touchesArray copy]];
-    }
-    
 }
 
-- (void)showDifferent:(BOOL)suc
+- (void)setSuccess:(BOOL)success
 {
-    _success = suc;
+    _success = success;
 
-    for (int i = 0 ; i < _touchesArray.count ; i ++ )
+    if (_success )
     {
-        NSInteger selection = [[[_touchesArray objectAtIndex:i] objectForKey:@"num"]intValue];
-        HZBGesturePasswordButton * buttonTemp = ((HZBGesturePasswordButton *)[_buttonArray objectAtIndex:selection-1]);
-        [buttonTemp setSuccess:_success];
-
+        return ;
+    }else
+    {
+        for (int i = 0 ; i < _touchedArray.count ; i ++ )
+        {
+            HZBGesturePasswordButton * buttonTemp = [_touchedArray objectAtIndex:i];
+            [buttonTemp setSuccess:_success];
+            
+        }
+        [self setNeedsDisplay];
     }
-    [self setNeedsDisplay];
 }
 
 
 - (void)drawRect:(CGRect)rect
 {
 
-    for (int i = 0 ; i < _touchesArray.count; i ++)
+    for (int i = 0 ; i < _touchedArray.count; i ++)
     {
         CGContextRef context = UIGraphicsGetCurrentContext();
-        if (![[_touchesArray objectAtIndex:i] objectForKey:@"num"])
-        {
-            [_touchesArray removeObjectAtIndex:i];
-            continue;
-        }
+
         if (_success)
         {
             CGContextSetRGBStrokeColor(context, 2/255.f, 174/255.f, 240/255.f, 0.7);
@@ -168,10 +165,13 @@
         }
         
         CGContextSetLineWidth(context,5);
-        CGContextMoveToPoint(context, [[[_touchesArray objectAtIndex:i] objectForKey:@"x"] floatValue], [[[_touchesArray objectAtIndex:i] objectForKey:@"y"] floatValue]);
-        if (i < _touchesArray.count- 1 )
+        CGPoint center = [[_touchedArray objectAtIndex:i] center];
+        CGContextMoveToPoint(context, center.x, center.y);
+        if (i < _touchedArray.count- 1 )
         {
-            CGContextAddLineToPoint(context, [[[_touchesArray objectAtIndex:i+1] objectForKey:@"x"] floatValue],[[[_touchesArray objectAtIndex:i+1] objectForKey:@"y"] floatValue]);
+            CGPoint nextCenter = [[_touchedArray objectAtIndex:i+1] center];
+
+            CGContextAddLineToPoint(context, nextCenter.x,nextCenter.y);
         }else
         {
             if (_success)
@@ -183,13 +183,18 @@
     }
 }
 
-- (void)enterArgin
+#pragma mark 清空数据 恢复到初始话状态
+/**
+    清空数据 恢复到初始话状态
+ */
+
+- (void)clear
 {
-    [_touchesArray removeAllObjects];
-    [_touchedArray removeAllObjects];
-    for (int i=0; i<_buttonArray.count; i++)
+    [self prepareData];
+    
+    for (int i = 0; i < _buttonArray.count; i++)
     {
-        HZBGesturePasswordButton * buttonTemp = ((HZBGesturePasswordButton *)[_buttonArray objectAtIndex:i]);
+        HZBGesturePasswordButton * buttonTemp = [_buttonArray objectAtIndex:i];
         [buttonTemp returnToTheOriginalData];
     }
     
@@ -197,15 +202,5 @@
 }
 
 
-- (void)enterArginRed
-{
-    for (int i=0; i<_touchesArray.count; i++)
-    {
-        NSInteger selection = [[[_touchesArray objectAtIndex:i] objectForKey:@"num"]intValue];
-        HZBGesturePasswordButton * buttonTemp = ((HZBGesturePasswordButton *)[_buttonArray objectAtIndex:selection-1]);
-        [buttonTemp setSuccess:NO];
 
-    }
-    [self setNeedsDisplay];
-}
 @end

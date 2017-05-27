@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D33F1951ED5A47E00FA9801 /* HZBTextModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D33F1941ED5A47E00FA9801 /* HZBTextModel.m */; };
 		4D38FF3A1EC6B20200869CC9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF391EC6B20200869CC9 /* main.m */; };
 		4D38FF3D1EC6B20200869CC9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF3C1EC6B20200869CC9 /* AppDelegate.m */; };
 		4D38FF401EC6B20200869CC9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF3F1EC6B20200869CC9 /* ViewController.m */; };
@@ -19,9 +20,13 @@
 		4D38FF8B1EC7029700869CC9 /* HZBGesturePasswordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF831EC7029700869CC9 /* HZBGesturePasswordView.m */; };
 		4D38FF8C1EC7029700869CC9 /* HZBGestureSmallButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF851EC7029700869CC9 /* HZBGestureSmallButton.m */; };
 		4D38FF8D1EC7029700869CC9 /* HZBTentacleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D38FF871EC7029700869CC9 /* HZBTentacleView.m */; };
+		4D944F531ED41A60008DD8AA /* WechatIMG2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D944F521ED41A60008DD8AA /* WechatIMG2.png */; };
+		4D944F571ED42AEA008DD8AA /* HZBGesturePasswordUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D944F561ED42AEA008DD8AA /* HZBGesturePasswordUtil.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D33F1931ED5A47E00FA9801 /* HZBTextModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZBTextModel.h; sourceTree = "<group>"; };
+		4D33F1941ED5A47E00FA9801 /* HZBTextModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZBTextModel.m; sourceTree = "<group>"; };
 		4D38FF351EC6B20200869CC9 /* GesturePassword.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GesturePassword.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D38FF391EC6B20200869CC9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4D38FF3B1EC6B20200869CC9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -44,6 +49,9 @@
 		4D38FF861EC7029700869CC9 /* HZBTentacleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZBTentacleView.h; sourceTree = "<group>"; };
 		4D38FF871EC7029700869CC9 /* HZBTentacleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZBTentacleView.m; sourceTree = "<group>"; };
 		4D38FF8E1EC702B900869CC9 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		4D944F521ED41A60008DD8AA /* WechatIMG2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WechatIMG2.png; sourceTree = "<group>"; };
+		4D944F551ED42AEA008DD8AA /* HZBGesturePasswordUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZBGesturePasswordUtil.h; sourceTree = "<group>"; };
+		4D944F561ED42AEA008DD8AA /* HZBGesturePasswordUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZBGesturePasswordUtil.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +84,7 @@
 		4D38FF371EC6B20200869CC9 /* GesturePassword */ = {
 			isa = PBXGroup;
 			children = (
+				4D944F521ED41A60008DD8AA /* WechatIMG2.png */,
 				4D38FF791EC7029700869CC9 /* HZBGesturePassword */,
 				4D38FF3B1EC6B20200869CC9 /* AppDelegate.h */,
 				4D38FF3C1EC6B20200869CC9 /* AppDelegate.m */,
@@ -102,6 +111,7 @@
 		4D38FF791EC7029700869CC9 /* HZBGesturePassword */ = {
 			isa = PBXGroup;
 			children = (
+				4D944F541ED42AC8008DD8AA /* Util */,
 				4D38FF7A1EC7029700869CC9 /* Controller */,
 				4D38FF7D1EC7029700869CC9 /* Model */,
 				4D38FF7E1EC7029700869CC9 /* readme.md */,
@@ -122,6 +132,8 @@
 		4D38FF7D1EC7029700869CC9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				4D33F1931ED5A47E00FA9801 /* HZBTextModel.h */,
+				4D33F1941ED5A47E00FA9801 /* HZBTextModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -139,6 +151,15 @@
 				4D38FF871EC7029700869CC9 /* HZBTentacleView.m */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		4D944F541ED42AC8008DD8AA /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				4D944F551ED42AEA008DD8AA /* HZBGesturePasswordUtil.h */,
+				4D944F561ED42AEA008DD8AA /* HZBGesturePasswordUtil.m */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,6 +221,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D944F531ED41A60008DD8AA /* WechatIMG2.png in Resources */,
 				4D38FF481EC6B20200869CC9 /* LaunchScreen.storyboard in Resources */,
 				4D38FF451EC6B20200869CC9 /* Assets.xcassets in Resources */,
 				4D38FF431EC6B20200869CC9 /* Main.storyboard in Resources */,
@@ -218,9 +240,11 @@
 				4D38FF3D1EC6B20200869CC9 /* AppDelegate.m in Sources */,
 				4D38FF8C1EC7029700869CC9 /* HZBGestureSmallButton.m in Sources */,
 				4D38FF3A1EC6B20200869CC9 /* main.m in Sources */,
+				4D944F571ED42AEA008DD8AA /* HZBGesturePasswordUtil.m in Sources */,
 				4D38FF891EC7029700869CC9 /* readme.md in Sources */,
 				4D38FF881EC7029700869CC9 /* HZBGesturePasswordController.m in Sources */,
 				4D38FF8D1EC7029700869CC9 /* HZBTentacleView.m in Sources */,
+				4D33F1951ED5A47E00FA9801 /* HZBTextModel.m in Sources */,
 				4D38FF8B1EC7029700869CC9 /* HZBGesturePasswordView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

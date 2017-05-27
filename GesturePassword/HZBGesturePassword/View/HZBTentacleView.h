@@ -1,44 +1,22 @@
 
 #import <UIKit/UIKit.h>
-
-@protocol ResetDelegate <NSObject>
-
-- (void)resetPassword:(NSString *)result withArray:(NSMutableArray * )touchesArray;
-
-@end
-
-@protocol VerificationDelegate <NSObject>
-
-- (void)verification:(NSString *)result;
-
-@end
-
-@protocol TouchBeginDelegate <NSObject>
-
-//- (void)gestureTouchBegin;
-
-@end
-
-
+#import "HZBGesturePasswordButton.h"
 
 @interface HZBTentacleView : UIView
 
-@property (nonatomic,strong) NSArray * buttonArray;
+@property ( nonatomic , retain ) NSArray <HZBGesturePasswordButton *> * buttonArray;
 
-@property (nonatomic,assign) id<VerificationDelegate> rerificationDelegate;
+@property ( nonatomic , copy ) void(^touchesEndedCallback)(NSString * touchesResult) ;
+@property ( nonatomic , copy ) void(^touchesBeginCallback)() ;
 
-@property (nonatomic,assign) id<ResetDelegate> resetDelegate;
 
-@property (nonatomic,assign) id<TouchBeginDelegate> touchBeginDelegate;
+@property ( nonatomic , assign ) BOOL success ;
 
-/*
- 判断是设置还是验证
- 1: Verify
- 2: Reset
+
+
+/**
+        清空数据 恢复到初始话状态
  */
-@property (nonatomic,assign) NSInteger style;
+- (void)clear ;
 
-- (void)enterArgin;
-- (void)enterArginRed;
-- (void)showDifferent:(BOOL)suc;
 @end

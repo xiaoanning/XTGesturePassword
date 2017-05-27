@@ -2,6 +2,7 @@
 #import "HZBGestureSmallButton.h"
 #import "HZBGesturePasswordButton.h"
 #import "HZBTentacleView.h"
+#import "HZBGesturePasswordUtil.h"
 
 
 @interface HZBGesturePasswordView ()
@@ -9,6 +10,7 @@
 
 @property ( nonatomic , assign ) GesturePasswordType type ;
 
+@property ( nonatomic , retain ) UILabel * titleLabel2 ;
 
 @property ( nonatomic , retain ) UIView * smallGestureView ;
 @property ( nonatomic , retain ) UIView * bigGestureView ;
@@ -16,6 +18,18 @@
 
 @property ( nonatomic , strong ) UILabel * bottomLeftLabel;
 @property ( nonatomic , strong ) UILabel * bottomrightLabel;
+
+
+
+@property ( nonatomic , copy ) NSString * resultStr;
+@property ( nonatomic , copy ) NSString * firstTouchStr;
+
+@property ( nonatomic , strong ) UILabel * tipsLabel;
+
+@property (nonatomic,strong) UILabel *userTitle;
+
+@property (nonatomic,strong) HZBTentacleView * tentacleView;
+
 
 
 @end
@@ -26,7 +40,7 @@
     
 }
 
-- (id)initWithFrame:(CGRect)frame type:(GesturePasswordType)type
+- (id)initWithFrame:(CGRect)frame type:(GesturePasswordType)type 
 {
     self = [super initWithFrame:frame];
     if (self)
@@ -40,7 +54,7 @@
         NSUInteger rowItemCount = 3 ;
         NSUInteger colItemCount = 3 ;
 
-        if (type == GesturePasswordTypeLogin)
+        if (type == GesturePasswordTypeLogin || type == GesturePasswordTypeReset)
         {
             CGFloat topSpace = 163.0f / 1334.0f * KKScreenHeight ;
             y += topSpace ;
@@ -49,7 +63,14 @@
             [unlockTitleLabel setTextColor:[UIColor whiteColor]];
             [unlockTitleLabel setBackgroundColor: [UIColor clearColor]];
             [unlockTitleLabel setTextAlignment:NSTextAlignmentCenter];
-            unlockTitleLabel.text = @"手势解锁";
+            if (type == GesturePasswordTypeLogin)
+            {
+                unlockTitleLabel.text = @"手势解锁";
+
+            }else if (type == GesturePasswordTypeReset)
+            {
+                unlockTitleLabel.text = @"验证手势";
+            }
             [unlockTitleLabel setFont:KKFont22];
             
             [unlockTitleLabel sizeToFit];
@@ -63,7 +84,9 @@
             
             UILabel * userNameLabel = [[UILabel alloc]init];
             [userNameLabel setTextColor:[UIColor whiteColor]];
-            _userTitle.text =[NSString stringWithFormat:@"当前帐户：%@", _userName];
+            HZBTextModel * model = [HZBGesturePasswordUtil getTextModel];
+            userNameLabel.text =[NSString stringWithFormat:@"当前帐户：%@ (%@)",
+                              model.userName , model.userId];
             userNameLabel.textAlignment = NSTextAlignmentCenter;
             [userNameLabel setBackgroundColor: [UIColor clearColor]];
             
@@ -77,7 +100,7 @@
             y += userNameLabelHeight + (160.0f - 60.0f) / 1330.0f * KKScreenHeight ;
             
 
-        }else
+        }else if(type == GesturePasswordTypeOneStepSet)
         {
             CGFloat topSpace = 163.0f / 1334.0f * KKScreenHeight ;
             y += topSpace ;
@@ -99,18 +122,18 @@
             
             y += titleLabel1Height + space1 ;
             
-            UILabel * titleLabel2 = [[UILabel alloc]init];
-            [titleLabel2 setTextColor:[UIColor whiteColor]];
-            titleLabel2.text = @"绘制解锁图案";
-            titleLabel2.textAlignment = NSTextAlignmentCenter;
-            [titleLabel2 setBackgroundColor: [UIColor clearColor]];
-            [titleLabel2 setFont:KKFont16];
-            [titleLabel2 sizeToFit];
-            CGFloat titleLabel2Height = CGRectGetHeight(titleLabel2.frame) ;
-            CGFloat titleLabel2Width = CGRectGetWidth(titleLabel2.frame) ;
-            titleLabel2.frame =  CGRectMake(CGRectGetMidX(frame) - titleLabel2Width/2.0 , y , titleLabel2Width , titleLabel2Height );
+            _titleLabel2 = [[UILabel alloc]init];
+            [_titleLabel2 setTextColor:[UIColor whiteColor]];
+            _titleLabel2.text = @"绘制解锁图案";
+            _titleLabel2.textAlignment = NSTextAlignmentCenter;
+            [_titleLabel2 setBackgroundColor: [UIColor clearColor]];
+            [_titleLabel2 setFont:KKFont16];
+            [_titleLabel2 sizeToFit];
+            CGFloat titleLabel2Height = CGRectGetHeight(_titleLabel2.frame) ;
+            CGFloat titleLabel2Width = KKScreenWidth ;
+            _titleLabel2.frame =  CGRectMake(CGRectGetMidX(frame) - titleLabel2Width/2.0 , y , titleLabel2Width , titleLabel2Height );
 
-            [self addSubview:titleLabel2];
+            [self addSubview:_titleLabel2];
 
             
             CGFloat space2 = 20.0f / 1330.0f * KKScreenHeight ;
@@ -164,15 +187,23 @@
 
         [self addSubview:_bigGestureView];
         _tentacleView = [[HZBTentacleView alloc]initWithFrame:_bigGestureView.frame];
+        
+        __block typeof(self) weakSelf = self ;
+
+        [_tentacleView setTouchesBeginCallback:^{
+            
+            [weakSelf changeUIWhenTouchesBegin];
+        }];
+        
         [_tentacleView setButtonArray:_buttonArray];
-        [_tentacleView setTouchBeginDelegate:self];
+
         [self addSubview:_tentacleView];
         
         
         y += CGRectGetHeight(_bigGestureView.frame) ;
         
 
-        //登陆不显示  设置：首次绘制解锁图案 请再次绘制解锁图案  错误时提示（两次密码不一致，密码不符合约定）
+        //登陆显示  设置：首次绘制解锁图案 请再次绘制解锁图案  错误时提示（两次密码不一致，密码不符合约定）
         _tipsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, y - bottomSpace, KKScreenWidth, bottomSpace)];
         [_tipsLabel setTextAlignment:NSTextAlignmentCenter];
         [_tipsLabel setFont:KKFont14];
@@ -181,48 +212,96 @@
         [_tipsLabel setHidden:YES];
         [self addSubview:_tipsLabel];
         
-        if (_type == GesturePasswordTypeSet )
+        CGFloat bottomLabelWidth = (KKScreenWidth - leftSpace - rightSpace)/2.0f ;
+        CGFloat bottomLabelHeight = 30.0f ;
+        _bottomLeftLabel = [[UILabel alloc]initWithFrame:CGRectMake(leftSpace, y, bottomLabelWidth, bottomLabelHeight )];
+        [_bottomLeftLabel setTextAlignment:NSTextAlignmentLeft];
+        [_bottomLeftLabel setFont:KKFont14];
+        [_bottomLeftLabel setTextColor:KKWhiteColor];
+        _bottomLeftLabel.userInteractionEnabled = YES ;
+        _bottomLeftLabel.hidden = YES ;
+        [self addSubview:_bottomLeftLabel];
+        
+        
+        _bottomrightLabel = [[UILabel alloc]initWithFrame:CGRectMake(KKScreenWidth - rightSpace - bottomLabelWidth, y, bottomLabelWidth, bottomLabelHeight )];
+        [_bottomrightLabel setTextAlignment:NSTextAlignmentRight];
+        [_bottomrightLabel setFont:KKFont14];
+        [_bottomrightLabel setTextColor:KKWhiteColor];
+        _bottomrightLabel.userInteractionEnabled = YES ;
+        _bottomrightLabel.hidden = YES ;
+        [self addSubview:_bottomrightLabel];
+
+
+        if (type == GesturePasswordTypeLogin)
         {
-            
-        }else
-        {
-            CGFloat bottomLabelWidth = (KKScreenWidth - leftSpace - rightSpace)/2.0f ;
-            CGFloat bottomLabelHeight = 30.0f ;
-            _bottomLeftLabel = [[UILabel alloc]initWithFrame:CGRectMake(leftSpace, y, bottomLabelWidth, bottomLabelHeight )];
-            [_bottomLeftLabel setTextAlignment:NSTextAlignmentLeft];
-            [_bottomLeftLabel setFont:KKFont14];
-            [_bottomLeftLabel setTextColor:KKWhiteColor];
+            _bottomLeftLabel.hidden = NO ;
             [_bottomLeftLabel setText:@"忘记手势密码"];
-            _bottomLeftLabel.userInteractionEnabled = YES ;
-            [_bottomLeftLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(bottomLeftLabelAction)]];
-            [self addSubview:_bottomLeftLabel];
+
+            [self addGestureRecognizerForView:_bottomLeftLabel target:self action:@selector(forgetActionWhenLogin)];
             
+            _bottomrightLabel.hidden = NO ;
+            [_bottomrightLabel setText:@"其他登陆方式"];
+            [self addGestureRecognizerForView:_bottomrightLabel target:self action:@selector(otherLoginTypeAction)];
+
+        }else if (type == GesturePasswordTypeReset)
+        {
+            _bottomLeftLabel.hidden = NO ;
+            [_bottomLeftLabel setText:@"忘记手势密码"];
             
-            _bottomrightLabel = [[UILabel alloc]initWithFrame:CGRectMake(KKScreenWidth - rightSpace - bottomLabelWidth, y, bottomLabelWidth, bottomLabelHeight )];
-            [_bottomrightLabel setTextAlignment:NSTextAlignmentRight];
-            [_bottomrightLabel setFont:KKFont14];
-            [_bottomrightLabel setTextColor:KKWhiteColor];
-            [_bottomrightLabel setText:@"用其他账号登录"];
-            _bottomrightLabel.userInteractionEnabled = YES ;
-            [_bottomrightLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(bottomRightLabelAction)]];
-            [self addSubview:_bottomrightLabel];
+            [self addGestureRecognizerForView:_bottomLeftLabel target:self action:@selector(forgetActionWhenReset)];
         }
-
-
+        
         
     }
     
     return self;
 }
-
--(void)bottomLeftLabelAction
+#pragma mark 重置时忘记密码
+-(void)forgetActionWhenReset
 {
-    NSLog(@"左边按钮被点击");
+    NSLog(@"忘记密码按钮被点击");
+    
+    if (_forgetPasswordWhenResetCallback)
+    {
+        _forgetPasswordWhenResetCallback();
+    }
+
 }
 
--(void)bottomRightLabelAction
+#pragma mark 登陆时忘记密码
+-(void)forgetActionWhenLogin
 {
-    NSLog(@"右边按钮被点击");
+    NSLog(@"忘记密码按钮被点击");
+    
+    if (_forgetPasswordWhenLoginCallback)
+    {
+        _forgetPasswordWhenLoginCallback();
+    }
+
+}
+#pragma mark 重新设置
+-(void)resetAction
+{
+    NSLog(@"重新设置按钮被点击");
+    
+    [self setSmallButtonView:_firstTouchStr andSelected:NO];
+    [_tentacleView clear];
+
+    _resultStr = @"" ;
+    _firstTouchStr = @"" ;
+    _type = GesturePasswordTypeOneStepSet ;
+    
+
+}
+
+-(void)otherLoginTypeAction
+{
+    NSLog(@"其他登陆方式按钮被点击");
+    
+    if (_otherLoginType)
+    {
+        _otherLoginType();
+    }
 
 }
 
@@ -244,27 +323,179 @@
                                 kCGGradientDrawsBeforeStartLocation);
 }
 
-
-- (void)checkdrawView:(NSArray *)array
+-(void)setTouchesEndedCallback:(void (^)(NSString *, GesturePasswordType, void (^)(TouchCode, NSString *)))touchesEndedCallback
 {
+    _touchesEndedCallback = touchesEndedCallback ;
     
-    [self clearDrawView];
+    __block typeof(self) weakSelf = self ;
     
-    for ( NSDictionary * num in array ){
-        if(![num objectForKey:@"num"])break;
-        HZBGestureSmallButton *view = (HZBGestureSmallButton *)[_drawView viewWithTag:[[num objectForKey:@"num"] intValue]+99];
-        view.selected = YES;
+    [_tentacleView setTouchesEndedCallback:^(NSString * touchesResult ){
+        
+       weakSelf.resultStr = touchesResult ;
+        
+        
+        if (weakSelf.type == GesturePasswordTypeTwoStepVerification)
+        {
+            if ([weakSelf.firstTouchStr isEqualToString:touchesResult])
+            {
+                weakSelf.type = GesturePasswordTypeSet ;
+
+            }else
+            {
+                [weakSelf showResultUI:TouchIsTwoStepVerificationError andtips:@"两次密码不一致"];
+                
+                return  ;
+            }
+        }
+        
+        if (weakSelf.touchesEndedCallback )
+        {
+            weakSelf.touchesEndedCallback (touchesResult,weakSelf.type,^(TouchCode code , NSString * tips){
+                [weakSelf showResultUI:code andtips:tips];
+            });
+        }
+    }];
+
+}
+
+#pragma mark 设置小视图
+- (void)setSmallButtonView:(NSString *)selectedStr andSelected:(BOOL)selected
+{
+
+    for(int i = 0 ; i < selectedStr.length ; i ++ )
+    {
+        NSInteger value = [[selectedStr substringWithRange:NSMakeRange(i, 1)] integerValue] ;
+
+        @try {
+
+            NSAssert(value > 0 , @"手势选中的数字有错 %@" ,  selectedStr);
+
+        } @catch (NSException *exception) {
+
+            return ;
+            
+        } @finally {
+
+        }
+        
+        value -= 1 ;
+        
+        HZBGestureSmallButton *view = (HZBGestureSmallButton *)[_smallGestureView viewWithTag: value + 100];
+        view.selected = selected;
         [view setNeedsDisplay];
     }
 }
 
-- (void)clearDrawView
+#pragma mark 加手势
+-(void)addGestureRecognizerForView:(UIView *)gesView target:( id)target action:( SEL)action
 {
-    for(int i = 0; i<9; i++) {
-        HZBGestureSmallButton *view = (HZBGestureSmallButton *)[_drawView viewWithTag:i + 100];
-        view.selected = NO;
-        [view setNeedsDisplay];
+    for (UIGestureRecognizer * ges in gesView.gestureRecognizers)
+    {
+        [gesView removeGestureRecognizer:ges];
     }
+    [gesView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:target action:action]];
+
+}
+
+#pragma mark 根据校验结果显示ui
+
+-(void)showResultUI:(TouchCode) code andtips:( NSString *) tips
+{
+    _tipsLabel.hidden = YES ;
+    
+    if (_type == GesturePasswordTypeLogin)
+    {
+        if (code == TouchIsSuccess)
+        {
+            //不做处理
+        }else if (code == TouchIsLoginError )
+        {
+            _tipsLabel.hidden = NO ;
+        }
+        
+    }else if (_type == GesturePasswordTypeSet)
+    {
+        
+        NSLog(@"%@",tips);
+        
+    }else if (_type == GesturePasswordTypeOneStepSet)
+    {
+        if (code == TouchIsSuccess)
+        {
+            //保存 第一次设置的手势
+            _firstTouchStr = _resultStr ;
+            
+            [self setSmallButtonView:_firstTouchStr andSelected:YES];
+            [_tentacleView clear];
+            
+            //显示重新绘制按钮
+            _bottomrightLabel.hidden = NO ;
+            [_bottomrightLabel setText:@"重新绘制"];
+            
+            [self addGestureRecognizerForView:_bottomrightLabel target:self action:@selector(resetAction)];
+            
+            
+            _type = GesturePasswordTypeTwoStepVerification ;
+            _titleLabel2.text = [NSString stringWithFormat:@"%@",@"请再次输入以确认"];
+            
+        }else if(code == TouchIsLengthLess ) //失败 显示提示文字
+        {
+            _tipsLabel.hidden = NO ;
+        }
+            
+        
+    }else if (_type == GesturePasswordTypeTwoStepVerification)
+    {
+        if (code == TouchIsSuccess)
+        {
+            //不做处理
+        }else if(code == TouchIsTwoStepVerificationError)
+        {
+            //设置不成功
+            _tipsLabel.hidden = NO ;
+            _bottomrightLabel.hidden = YES ;
+
+        }else if (code == TouchIsError)
+       {
+      
+       }
+    }else if (_type == GesturePasswordTypeReset)
+    {
+        if (code == TouchIsSuccess)
+        {
+            
+            
+        }else if(code == TouchIsLoginError)
+        {
+
+            _tipsLabel.hidden = NO ;
+        }
+    }
+    
+    
+    if (!_tipsLabel.hidden)
+    {
+        _tipsLabel.text = [NSString stringWithFormat:@"%@",tips];
+        
+        [_tentacleView setSuccess:NO];
+        
+        [self performSelector:@selector(showErrorUI) withObject:nil afterDelay:1];
+
+    }
+
+}
+
+#pragma mark 错误时改变ui
+-(void)showErrorUI
+{
+    [_tentacleView clear];
+}
+
+#pragma mark 手势开始时改变ui
+-(void)changeUIWhenTouchesBegin
+{
+    //隐藏或显示相应的ui
+    
 }
 
 @end
